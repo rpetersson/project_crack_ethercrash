@@ -15,12 +15,6 @@ array_of_mutipliers = np.arange(1.00,5.00,0.01) # make bet array 1.01 -> 10x
 biggest_bank = {}
 
 # for bet in bets:
-
-bank = 50000
-bet_value = 1000
-
-lostNr = 0
-
 def simple_betting_algo1():
     db = sqlite3.connect(".\db.db")
     c = db.cursor()
@@ -43,6 +37,12 @@ def simple_betting_algo1():
         return False
 
 
+bank = 50000
+bet_value = 1000
+
+lostNr = 0
+
+
 
 for multiplier in array_of_mutipliers: #För varje värde i array of multipliers.
 
@@ -53,7 +53,7 @@ for multiplier in array_of_mutipliers: #För varje värde i array of multipliers
         if simple_betting_algo1():
             bank = bank - bet_value
         else:
-            bank = bank
+            bet_value = 0
 
         if float(i[1]) >= round(multiplier, 2):
             bank = bank + (bet_value * multiplier)
