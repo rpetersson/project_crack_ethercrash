@@ -8,7 +8,7 @@ db = sqlite3.connect(".\db.db")
 c = db.cursor()
 
 
-c.execute("SELECT * FROM tbl_multi ORDER BY ID ASC LIMIT 50")
+c.execute("SELECT * FROM tbl_multi ORDER BY ID ASC LIMIT 1000")
 
 data = c.fetchall() #History of bets..
 c.close()
@@ -33,7 +33,8 @@ for bet in bets:
                 break
 
 
-    biggest_bank[round(bank, 1)]=round((bet),2)
+
+    biggest_bank[round(bank, 1)]=round((bet),2) #Adds value of bank as index with bet as value
 
 
 
