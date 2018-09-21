@@ -10,7 +10,7 @@ c.execute("SELECT * FROM tbl_multi ORDER BY ID ASC LIMIT 5000")
 db_data = c.fetchall() #History of bets..
 c.close()
 
-array_of_mutipliers = np.arange(1.00,5.00,0.01) # make bet array 1.01 -> 10x
+array_of_mutipliers = np.arange(1.00,2.00,0.01) # make bet array 1.01 -> 10x
 
 biggest_bank = {}
 
@@ -30,7 +30,7 @@ def simple_betting_algo1():
         if float(i[1]) >= float(1.5):
             low_streak = low_streak + 1
 
-    if low_streak >=3:
+    if low_streak >=4:
 
         return True
     else:
@@ -38,9 +38,10 @@ def simple_betting_algo1():
 
 
 bank = 50000
-bet_value = 1000
+
 
 lostNr = 0
+winNr = 0
 
 
 
@@ -50,6 +51,8 @@ for multiplier in array_of_mutipliers: #För varje värde i array of multipliers
 
     for i in db_data: #För varje värde i db_data
 
+        bet_value = 1000
+
         if simple_betting_algo1():
             bank = bank - bet_value
         else:
@@ -57,7 +60,9 @@ for multiplier in array_of_mutipliers: #För varje värde i array of multipliers
 
         if float(i[1]) >= round(multiplier, 2):
             bank = bank + (bet_value * multiplier)
+
         else:
+
             if bank <= 0:
                 break
 
