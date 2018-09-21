@@ -1,8 +1,5 @@
 import sqlite3
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.ticker as mtick
-import pandas as pd
 
 db = sqlite3.connect(".\db.db")
 c = db.cursor()
@@ -10,39 +7,61 @@ c = db.cursor()
 
 c.execute("SELECT * FROM tbl_multi ORDER BY ID ASC LIMIT 5000")
 
-data = c.fetchall() #History of bets..
+db_data = c.fetchall() #History of bets..
 c.close()
 
-bets = np.arange(1.00,20.00,0.01) # make bet array 1.01 -> 10x
-
-print(bets)
+array_of_mutipliers = np.arange(1.00,5.00,0.01) # make bet array 1.01 -> 10x
 
 biggest_bank = {}
 
 # for bet in bets:
 
-bank = 10000
-bet_value = 10
+bank = 50000
+bet_value = 1000
 
 lostNr = 0
 
-for bet in bets:
+def simple_betting_algo1():
+    db = sqlite3.connect(".\db.db")
+    c = db.cursor()
 
-    for i in data:
+    c.execute("SELECT * FROM tbl_multi ORDER BY ID ASC LIMIT 3")
 
-        #if float(i[1]) != 0:
-        bank = bank - bet_value
+    db_data = c.fetchall()  # History of bets..
+    c.close()
 
-        if float(i[1]) >= round(bet, 2):
+    low_streak = 0
 
-            bank = bank + (bet_value * bet)
+    for i in db_data:
+        if float(i[1]) >= float(1.5):
+            low_streak = low_streak + 1
+
+    if low_streak >=3:
+
+        return True
+    else:
+        return False
+
+
+
+for multiplier in array_of_mutipliers: #För varje värde i array of multipliers.
+
+    print(multiplier)
+
+    for i in db_data: #För varje värde i db_data
+
+        if simple_betting_algo1():
+            bank = bank - bet_value
         else:
-            lostNr = lostNr + 1
-            #print("Lost again! Bank = " + str(bank) + " lost times = " + str(lostNr))
+            bank = bank
+
+        if float(i[1]) >= round(multiplier, 2):
+            bank = bank + (bet_value * multiplier)
+        else:
             if bank <= 0:
                 break
 
-    biggest_bank[round(bank, 1)]=round((bet),2) #Adds value of bank as index with bet as value
+    biggest_bank[round(bank, 1)]=round((multiplier),2) #Adds value of bank as index with bet as value
 
 
 print(max(biggest_bank))
