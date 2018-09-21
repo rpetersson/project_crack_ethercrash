@@ -8,25 +8,16 @@ db = sqlite3.connect(".\db.db")
 c = db.cursor()
 
 
-c.execute("SELECT * FROM tbl_multi ORDER BY ID ASC LIMIT 500")
+c.execute("SELECT * FROM tbl_multi ORDER BY ID ASC LIMIT 50")
 
-#History of bets..
-data = c.fetchall()
-
+data = c.fetchall() #History of bets..
 c.close()
 
-
-#make bet array 1.01 -> 10x
-
-bets = np.arange(1.00,10.00,0.01)
+bets = np.arange(1.00,10.00,0.01) # make bet array 1.01 -> 10x
 
 print(bets)
 
-#print(bets)
-
-
 biggest_bank = {}
-
 
 for bet in bets:
 
@@ -38,13 +29,15 @@ for bet in bets:
             bank = bank + (bet_value * bet)
         else:
             bank = bank - bet_value
-            if bank <= bet:
+            if bank <= 0:
                 break
 
 
     biggest_bank[round(bank, 1)]=round((bet),2)
 
 
+
+# For plotting graphs...
 
 x = []
 y = []
